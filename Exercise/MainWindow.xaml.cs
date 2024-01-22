@@ -1,6 +1,8 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -17,7 +19,6 @@ namespace Exercise
     public partial class MainWindow : Window
     {
         List<Band> Bands = new List<Band>();
-        List<Band> FilteredBands = new List<Band>();
         string filter = "";
 
         public MainWindow()
@@ -64,26 +65,26 @@ namespace Exercise
 
         private void LbxBands_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (LbxAlbums.SelectedItem != null) { UpdateInfo(); }
+            if (LbxBands.SelectedItem != null) { UpdateInfo(); }
 
         }
 
         private void CbxGenre_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             filter = CbxGenre.SelectedItem as string;
+            List<Band> filteredBands = new List<Band>();
 
-            FilteredBands.Clear();
             for (int i = 0; i < Bands.Count; i++)
             {
                 if (Bands[i].SubGenre == filter)
                 {
-                    FilteredBands.Add(Bands[i]);
+                    filteredBands.Add(Bands[i]);
                 }
             }
 
 
 
-            Update(FilteredBands);
+            Update(filteredBands);
         }
 
         // Methods
@@ -94,19 +95,23 @@ namespace Exercise
             return copy;
         }
 
+        public string membersString(List<string> members)
+        {
+            string membersString = "";
+            for (int i = 0; i < members.Count; i++)
+            {
+                membersString += members[i] + ", ";
+            }
+            return membersString;
+        }
+
         public void UpdateInfo()
         {
             Band selected = LbxBands.SelectedItem as Band;
 
             // Update InfoBoxes
             TblkDateFormed.Text = selected.YearFormed.ToString();
-            string members = "";
-            for (int i = 0; i < selected.Members.Count; i++)
-            {
-                members += selected.Members[i] + ", ";
-            }
-
-            TblkMembers.Text = members;
+            TblkMembers.Text = membersString(selected.Members);
 
             // Update Listbox
             LbxAlbums.ItemsSource = null;
@@ -116,10 +121,29 @@ namespace Exercise
         public void Update(List<Band> bandsToDisplay)
         {
             LbxBands.ItemsSource = null;
-            FilteredBands.Sort();
             LbxBands.ItemsSource = bandsToDisplay;
 
             LbxAlbums.ItemsSource = null;
+        }
+
+        public void CreateFile()
+        {
+            Band selectedBand = LbxBands.SelectedItem as Band;
+
+            using (StreamWriter sw = new StreamWriter(System.IO.Directory.GetCurrentDirectory() + @"/save.txt"))
+            {
+                sw.WriteLine(selectedBand.Name);
+                sw.WriteLine(selectedBand.YearFormed);
+                sw.WriteLine($"Members" + membersString(selectedBand.Members));
+                sw.WriteLine("Albums");
+                foreach (Album album in selectedBand.Albums)
+                { sw.WriteLine(album.Name + album.ReleaseYear + album.Sales); }
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            CreateFile();
         }
     }
 }

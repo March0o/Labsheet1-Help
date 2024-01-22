@@ -18,7 +18,7 @@
         <TextBlock x:Name="TblkMembers" HorizontalAlignment="Left" Height="45" Margin="492,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="265"><Run Language="en-gb" Text="John Doe, Jane Doe"/></TextBlock>
         <TextBlock HorizontalAlignment="Left" Height="33" Margin="433,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" FontSize="20"><Run Language="en-gb" Text="Albums"/></TextBlock>
         <ListBox x:Name="LbxAlbums" HorizontalAlignment="Left" Height="153" Margin="433,183,0,0" VerticalAlignment="Top" Width="231" d:ItemsSource="{d:SampleData ItemCount=5}"/>
-        <Button Content="Save" HorizontalAlignment="Left" Height="24" Margin="567,361,0,0" VerticalAlignment="Top" Width="97"/>
+        <Button Content="Save" HorizontalAlignment="Left" Height="24" Margin="567,361,0,0" VerticalAlignment="Top" Width="97" Click="Button_Click"/>
 
     </Grid>
 </Window>

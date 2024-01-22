@@ -10,7 +10,7 @@ namespace Exercise
     {
         // Attributes
         public string Name { get; set; }
-        public int ReleaseYear { get; set; }
+        public DateTime ReleaseYear { get; set; }
         public int Sales { get; set; }
 
         //  Constructors
@@ -20,14 +20,21 @@ namespace Exercise
 
             // Random
             Random rnd = new Random();
-            ReleaseYear = rnd.Next(1950, 2050);
+
+            ReleaseYear = new DateTime(rnd.Next(1950, 2020), 1, 1);
+
             Sales = rnd.Next(0, 200000000);
         }
 
         // Methods
         public override string ToString() 
         {
-            return Name;
+            return Name + " - " + YearsToRelease() + " Years Since Release";
+        }
+
+        public int YearsToRelease()
+        {
+            return DateTime.Now.Year - ReleaseYear.Year;
         }
     }
 }
